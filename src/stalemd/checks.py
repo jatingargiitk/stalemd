@@ -351,6 +351,7 @@ def _module(ref, repo, base, mod) -> Result:
 
 
 def _file_args(ref, repo, base, args) -> Result:
+    checked = 0
     for a in args:
         if a.startswith("-") or "=" in a:
             continue
@@ -359,7 +360,8 @@ def _file_args(ref, repo, base, args) -> Result:
             r = check_path(ref, repo, a, base)
             if r.status != OK:
                 return Result(ref, r.status, f"`{a}`: {r.reason}", r.hint)
-    return Result(ref, OK, "paths exist" if args else "runner")
+            checked += 1
+    return Result(ref, OK, "paths exist" if checked else "no file arguments to check")
 
 
 def check_part(ref: Ref, repo: Repo, base: str, part: str) -> Result:

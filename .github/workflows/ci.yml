@@ -28,8 +28,8 @@ jobs:
           set +e
           stalemd --root examples/demo-repo
           test $? -eq 1
-      - name: This repo's own instruction files are clean
-        run: stalemd
+      - name: This repo's own AGENTS.md is clean
+        run: stalemd AGENTS.md
   action:
     runs-on: ubuntu-latest
     steps:
