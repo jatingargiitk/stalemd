@@ -1,0 +1,26 @@
+name: stalemd
+description: Flag commands, scripts and paths in AGENTS.md / CLAUDE.md that no longer exist in the repo.
+branding:
+  icon: file-text
+  color: orange
+inputs:
+  files:
+    description: Space-separated instruction files to check. Default is to discover them.
+    required: false
+    default: ""
+  fail:
+    description: Fail the step when stale references are found.
+    required: false
+    default: "true"
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        STALEMD_FILES: ${{ inputs.files }}
+        STALEMD_FAIL: ${{ inputs.fail }}
+      run: |
+        args=(--format github)
+        if [ "$STALEMD_FAIL" != "true" ]; then args+=(--no-fail); fi
+        # shellcheck disable=SC2086
+        PYTHONPATH="${{ github.action_path }}/src" python3 -m stalemd "${args[@]}" $STALEMD_FILES
